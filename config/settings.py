@@ -132,6 +132,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']   # css/, js/, lib/, img/ del frontend
 MEDIA_URL = 'media/'                        # imágenes de cócteles subidas desde el admin
 MEDIA_ROOT = BASE_DIR / 'media'
 
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "inicio"
+LOGOUT_REDIRECT_URL = "catalogo"
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration

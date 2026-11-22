@@ -97,7 +97,8 @@ class MovimientoInventario(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="movimientos")
     tipo_movimiento = models.ForeignKey(TipoMovimiento, on_delete=models.PROTECT, related_name="movimientos")
     # Supuesto a confirmar: positivo suma al stock, negativo resta (el tipo no trae signo).
-    cantidad = models.IntegerField("cantidad")
+    # cantidad = models.IntegerField("cantidad")
+    cantidad = models.DecimalField("cantidad", max_digits=10, decimal_places=2)
     fecha = models.DateField("fecha", default=timezone.localdate)
     motivo = models.CharField("motivo", max_length=200, blank=True)
 
@@ -138,11 +139,13 @@ class Compra(models.Model):
 class DetalleCompra(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE, related_name="detalles")
     insumo = models.ForeignKey(Insumo, on_delete=models.PROTECT, related_name="detalles_compra")
-    cantidad = models.IntegerField(
-        "cantidad", validators=[MinValueValidator(1, "La cantidad comprada debe ser mayor que 0.")]
+    cantidad = models.DecimalField(
+        "cantidad", max_digits=10, decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.01"), "La cantidad comprada debe ser mayor que 0.")],
     )
-    costo_unitario = models.IntegerField(
-        "costo unitario", validators=[MinValueValidator(0, "El costo unitario no puede ser negativo.")]
+    costo_unitario = models.DecimalField(
+        "costo unitario", max_digits=10, decimal_places=2,
+        validators=[MinValueValidator(Decimal("0"), "El costo unitario no puede ser negativo.")],
     )
 
     class Meta:

@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("inventario.urls")),   # inicio, stock
     path("", include("carta.urls")),        # catalogo
     path("", include("ventas.urls")),       # venta
+    path("", include("usuarios.urls")),
 ]
 
 if settings.DEBUG:  # imágenes subidas desde el admin (solo desarrollo)

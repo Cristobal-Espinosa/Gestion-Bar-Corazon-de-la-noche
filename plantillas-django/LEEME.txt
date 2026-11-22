@@ -1,0 +1,35 @@
+FRONTEND LISTO PARA DJANGO - Corazón de la noche
+=================================================
+
+1) DÓNDE VA CADA COSA (dentro de tu app "inventario")
+   inventario/templates/inventario/  ->  index, menu, venta, stock, 404 (.html)
+   inventario/static/                ->  css/, js/, lib/, img/
+   Si tu app no se llama "inventario", cambia esa carpeta y la ruta en render().
+
+2) NOMBRES DE RUTAS (urls.py debe usar estos "name")
+   inicio    -> index.html
+   catalogo  -> menu.html
+   venta     -> venta.html
+   stock     -> stock.html
+
+3) VARIABLES QUE LA VISTA DEBE ENVIAR (render(request, "inventario/<pagina>.html", {...}))
+   menu.html
+     cocteles : lista de diccionarios {"obj": Coctel, "disponible": bool, "faltan": [nombres]}
+   venta.html
+     cocteles : queryset de Coctel (se usan c.id y c.nombre)
+     mensaje, tipo : resultado y clase del aviso ("success", "danger" o "warning")
+     coctel_sel, cantidad : lo que el usuario habia ingresado (para conservarlo si hay error)
+     error_cantidad : texto si la cantidad es invalida (marca el campo en rojo)
+     El formulario envia por POST: coctel (id) y cantidad
+   stock.html
+     insumos : objetos con id, nombre, unidad, stock y porcentaje() (0 a 100)
+     mensaje, tipo : igual que en venta
+     El formulario envia por POST: insumo (id), tipo ("reposicion" o "ajuste") y cantidad
+   Se usa "insumo" (no "licor") porque la carta incluye menta, limon, azucar, jugos, etc.
+   
+4) NOTAS
+   - Las fotos del catálogo rotan entre menu-1.jpg y menu-8.jpg. Más adelante conviene
+     agregar un campo "imagen" al modelo Coctel y usar {{ c.obj.imagen.url }}.
+   - 404.html: si quieren usarlo como página de error, cópienlo a la carpeta templates/ raíz.
+   - Cada página repite cabecera y pie. Más adelante se puede mover a un base.html con {% extends %}.
+   - settings.py: STATIC_URL = "static/" (viene por defecto) y "inventario" en INSTALLED_APPS.

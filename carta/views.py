@@ -18,6 +18,7 @@ def catalogo(request):
         Coctel.objects.filter(visible=True)
         .select_related("categoria")
         .prefetch_related("recetas__insumo")
+        .order_by("categoria__nombre", "nombre")   # orden base: categoría y luego nombre
     )
     if categoria_sel:
         cocteles = cocteles.filter(categoria=categoria_sel)
@@ -25,6 +26,10 @@ def catalogo(request):
     for c in cocteles:
         disponible, faltan = disponibilidad(c)
         items.append({"obj": c, "disponible": disponible, "faltan": faltan})
+    # Disponibles primero y no disponibles después. sort() es estable: dentro de cada
+    # grupo se conserva el orden base (categoría y nombre). Se calcula en cada visita,
+    # así que si baja el stock de un insumo el cóctel cambia de grupo solo.
+    items.sort(key=lambda item: not item["disponible"])
     contexto = {
         "cocteles": items,
         "categorias": CategoriaCoctel.objects.all(),   # todas, tengan o no cócteles visibles

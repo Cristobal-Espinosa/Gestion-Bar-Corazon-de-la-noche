@@ -24,6 +24,20 @@ def formato(valor):
     return texto
 
 
+def estado_reposicion(insumo):
+    """Compara el stock actual con el mínimo. Devuelve (estado, faltan):
+
+    * "bajo"   -> stock por debajo del mínimo; `faltan` = lo que falta para llegar al mínimo.
+    * "minimo" -> stock exactamente en el mínimo (sin faltante).
+    * "ok"     -> stock sobre el mínimo (sin alerta).
+    """
+    if insumo.stock_actual < insumo.stock_minimo:
+        return "bajo", insumo.stock_minimo - insumo.stock_actual
+    if insumo.stock_actual == insumo.stock_minimo:
+        return "minimo", Decimal("0")
+    return "ok", Decimal("0")
+
+
 def tipo_movimiento(nombre):
     """Obtiene (o crea la primera vez) el tipo de movimiento por su nombre."""
     return TipoMovimiento.objects.get_or_create(nombre=nombre)[0]

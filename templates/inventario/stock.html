@@ -89,10 +89,10 @@
 <div class="container-fluid p-5">
 <div class="mb-5 text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 700px; margin: auto;"><h5 class="section-title">Bodega y barra</h5><h1 class="display-5">Stock de insumos</h1><p class="mb-4">Consulta el nivel de cada licor y registra reposiciones o ajustes por conteo físico.</p></div>
 <div class="row g-5">
-<div class="col-lg-7"><div class="bg-light rounded h-100 p-5"><table class="table align-middle mb-0">
-<thead><tr><th>Insumo</th><th class="text-end">Stock</th></tr></thead><tbody>
-{% for l in licores %}<tr><td>{{ l.nombre }}</td><td class="text-end{% if l.bajo_minimo %} text-danger fw-bold{% endif %}">{{ l.stock_ml|floatformat:"-2" }} {{ l.unidad_label }}</td></tr>{% endfor %}
-</tbody></table></div></div>
+<div class="col-lg-7"><div class="bg-light rounded h-100 p-5"><div class="table-responsive"><table class="table align-middle mb-0">
+<thead><tr><th>Insumo</th><th class="text-end">Stock</th><th class="text-end">Mínimo</th><th>Reposición</th></tr></thead><tbody>
+{% for l in licores %}<tr><td>{{ l.nombre }}</td><td class="text-end{% if l.bajo_minimo %} text-danger fw-bold{% endif %}">{{ l.stock_ml|floatformat:"-2" }} {{ l.unidad_label }}</td><td class="text-end">{{ l.minimo|floatformat:"-2" }} {{ l.unidad_label }}</td><td>{% if l.estado == "bajo" %}<span class="badge bg-danger">Faltan {{ l.faltan|floatformat:"-2" }} {{ l.unidad_label }}</span>{% elif l.estado == "minimo" %}<span class="badge bg-warning text-dark">En el mínimo</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div></div></div>
 <div class="col-lg-5"><div class="bg-light rounded h-100 p-5"><h3 class="mb-4">Actualizar stock</h3>
 <form method="post">{% csrf_token %}<div class="row g-3">
 <div class="col-12"><select name="licor" aria-label="Licor" class="form-select bg-white border-0 px-4" style="height: 55px;">{% for l in licores %}<option value="{{ l.id }}">{{ l.nombre }} ({{ l.unidad_label }})</option>{% endfor %}</select></div>

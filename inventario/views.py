@@ -54,4 +54,20 @@ def stock(request):
                 "faltan": faltan,
             }
         )
-    return render(request, "inventario/stock.html", {"licores": licores, **flash.sacar(request)})
+
+    # Filtro por estado de stock (RF-07): ?estado=bajo_minimo | sin_stock. Cualquier otro valor equivale a "Todos".
+    filtro_estado = request.GET.get("estado", "")
+    if filtro_estado == "bajo_minimo":
+        licores_tabla = [l for l in licores if l["bajo_minimo"]]          # stock <= mínimo
+    elif filtro_estado == "sin_stock":
+        licores_tabla = [l for l in licores if l["stock_ml"] == 0]        # stock en cero
+    else:
+        filtro_estado = ""
+        licores_tabla = licores
+
+    # "licores" sigue completa porque la usa el formulario "Actualizar stock"; la tabla usa "licores_tabla".
+    return render(
+        request,
+        "inventario/stock.html",
+        {"licores": licores, "licores_tabla": licores_tabla, "filtro_estado": filtro_estado, **flash.sacar(request)},
+    )
